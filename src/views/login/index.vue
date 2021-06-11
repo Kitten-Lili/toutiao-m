@@ -1,7 +1,9 @@
 <template>
   <div class="login-container">
     <!-- 导航栏 -->
-    <van-nav-bar title="登录" class="page-nav-bar" />
+    <van-nav-bar title="登录" class="page-nav-bar">
+      <van-icon slot="left" name="cross" @click="$router.back()" />
+    </van-nav-bar>
     <!-- /导航栏 -->
 
     <!-- 登录表单 -->
@@ -52,10 +54,10 @@
 <script>
 import { login, sendSms } from '@/api/user'
 export default {
-  name: 'LoginIndex',
-  components: {},
-  props: {},
-  data () {
+  name: 'LoginIndex', // 组件名
+  components: {}, // 调用的组件
+  props: {}, // 接收传参
+  data () { // 绑定属性
     return {
       user: {
         mobile: '', // 手机号
@@ -80,11 +82,11 @@ export default {
       isCountDownShow: false // 是否展示倒计时
     }
   },
-  computed: {},
-  watch: {},
-  created () {},
-  mounted () {},
-  methods: {
+  computed: {}, // 计算属性
+  watch: {}, // 监听
+  created () {}, // 实例创建后调用
+  mounted () {}, // 实例挂载后调用
+  methods: { // 绑定事件
     // 登录事件
     async onSubmit () {
       // 获取表单数据
@@ -105,6 +107,7 @@ export default {
         // console.log('登录成功', res)
         this.$toast.success('登录成功')
         this.$store.commit('setUser', data.data)
+        this.$router.back()
       } catch (err) {
         if (err.response.status === 400) {
           console.log('手机号或验证码错误')
