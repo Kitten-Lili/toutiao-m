@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, sendSms } from '@/api/user'
 export default {
   name: 'LoginIndex',
   components: {},
@@ -127,6 +127,18 @@ export default {
       // 2. 验证通过, 显示倒计时
       this.isCountDownShow = true
       // 3. 请求发送验证码
+      try {
+        await sendSms(this.user.mobile)
+        // console.log('发送成功', res)
+        this.$toast('发送成功')
+      } catch (err) {
+        if (err.response.status === 429) {
+          this.$toast.success('发送太频繁了, 请稍后重试')
+        } else {
+          this.$toast.fail('发送失败, 请稍后重试')
+        }
+        this.isCountDownShow = false
+      }
     }
   }
 }
