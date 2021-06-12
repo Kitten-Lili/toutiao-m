@@ -16,10 +16,10 @@
           <van-image
           class="avatar"
           round
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="userInfo.photo"
           fit="cover"
           />
-          <span class="name">黑马头条号</span>
+          <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
           <van-button size="mini" round>编辑资料</van-button>
@@ -27,19 +27,19 @@
       </div>
       <div class="data-stats">
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{ userInfo.art_count }}</span>
           <span class="text">头条</span>
         </div>
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{ userInfo.follow_count }}</span>
           <span class="text">关注</span>
         </div>
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{ userInfo.fans_count }}</span>
           <span class="text">粉丝</span>
         </div>
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{ userInfo.like_count }}</span>
           <span class="text">获赞</span>
         </div>
       </div>
@@ -61,26 +61,56 @@
 
     <van-cell title="消息通知" is-link />
     <van-cell class="mb-9" title="小智同学" is-link />
-    <van-cell v-if="user" class="logout-cell" title="退出登录" />
+    <van-cell v-if="user" class="logout-cell" title="退出登录" clickable @click="onLogout" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { getUserInfo } from '@/api/user'
 export default {
   name: 'MyIndex',
   components: {}, // 调用组件
   props: {}, // 接收属性
   data () { // 绑定属性
-    return {}
+    return {
+      userInfo: {} // 用户信息
+    }
   },
   computed: {
     ...mapState(['user'])
   }, // 计算属性
   watch: {}, // 监听
-  created () {}, // 实例创建后立刻调用
+  created () { // 实例创建后立刻调用
+    // 如果用户登录了,则请求加载用户信息
+    if (this.user) {
+      this.loadUserInfo()
+    }
+  },
   mounted () {}, // 实例挂载后自调用
-  methods: {} // 绑定事件
+  methods: {
+    onLogout () {
+      // 退出提示
+      this.$dialog.confirm({
+        title: '确认退出吗？'
+      }).then(() => {
+        console.log('退出')
+        this.$store.commit('setUser', null)
+      }).catch(() => {
+        console.log('取消')
+      })
+      // 确定退出：清除登录状态（容器中的 user + 本地存储中的 user）
+    },
+    async loadUserInfo () {
+      try {
+        const { data } = await getUserInfo()
+        // console.log(data)
+        this.userInfo = data.data
+      } catch (err) {
+        this.$toast('获取用户数据失败, 请稍后重试')
+      }
+    }
+  } // 绑定事件
 }
 </script>
 
