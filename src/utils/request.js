@@ -14,7 +14,6 @@ request.interceptors.request.use(function (config) {
   if (user && user.token) {
     config.headers.Authorization = `Bearer ${user.token}`
   }
-  console.log(config)
   // 这里记得返回 config ，否则请求就停在这里了
   return config
 }, function (error) {
