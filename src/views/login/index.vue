@@ -109,13 +109,8 @@ export default {
         this.$store.commit('setUser', data.data)
         this.$router.back()
       } catch (err) {
-        if (err.response.status === 400) {
-          console.log('手机号或验证码错误')
-          this.$toast.fail('手机号或验证码错误')
-        } else {
-          console.log('登录失败,请稍后再试', err)
-          this.$toast.fail('登录失败,请稍后再试')
-        }
+        console.log('登录失败,请稍后再试', err)
+        this.$toast.fail('登录失败,请稍后再试')
       }
       // 根据请求响应结果处理后续操作
     },
@@ -136,11 +131,7 @@ export default {
         // console.log('发送成功', res)
         this.$toast('发送成功')
       } catch (err) {
-        if (err.response.status === 429) {
-          this.$toast.success('发送太频繁了, 请稍后重试')
-        } else {
-          this.$toast.fail('发送失败, 请稍后重试')
-        }
+        this.$toast.fail('发送失败, 请稍后重试', err)
         this.isCountDownShow = false
       }
     }

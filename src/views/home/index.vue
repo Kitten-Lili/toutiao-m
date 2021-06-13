@@ -3,6 +3,7 @@
     <!-- 导航栏 -->
     <van-nav-bar
       class="page-nav-bar"
+      fixed
     >
       <van-button
         slot="title"
@@ -16,7 +17,9 @@
     <!-- /导航栏 -->
     <!-- 频道列表 -->
     <van-tabs class="channel-tabs" v-model="active" animated swipeable>
-      <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">{{ channel.name }}</van-tab>
+      <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
+        <ArticleList :channel="channel" />
+      </van-tab>
       <div class="placeholder" slot="nav-right"></div>
       <div slot="nav-right" class="hamburger-btn">
         <i class="toutiao toutiao-gengduo"></i>
@@ -28,10 +31,13 @@
 
 <script>
 import { getUserChannels } from '@/api/user'
+import ArticleList from './components/article-list'
 
 export default {
   name: 'HomeIndex',
-  components: {}, // 调用组件
+  components: { // 调用组件
+    ArticleList
+  },
   props: {}, // 接收属性
   data () { // 绑定属性
     return {
@@ -60,6 +66,8 @@ export default {
 
 <style scoped lang="less">
 .home-container {
+  padding-top: 174px;
+  padding-bottom: 100px;
   // /deep/ 深度作用操作符
   /deep/ .van-nav-bar__title {
     max-width: unset;
@@ -75,6 +83,11 @@ export default {
 
   /deep/ .channel-tabs {
     .van-tabs__wrap {
+      position: fixed;
+      top: 92px;
+      z-index: 1;
+      left: 0;
+      right: 0;
       height: 82px;
     }
     .van-tab {
